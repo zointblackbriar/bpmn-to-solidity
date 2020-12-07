@@ -36,9 +36,29 @@ dependencies {
 }
 
 // Define the main class for the application
-mainClassName = 'com.github.rasika.bpmn2solidity.Main'
+ext {
+    javaMainClass = 'com.github.rasika.bpmn2solidity.Main'
+}
+
+application {
+    mainClassName = javaMainClass
+}
 
 test {
     // Use TestNG for unit tests
     useTestNG()
+}
+
+task runWithJavaExec(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = javaMainClass
+}
+
+task runWithExecJarOnClassPath(type: Exec) {
+    dependsOn jar 
+    group = "Execution"
+    description = "Run the MainClass from the output jar in classpath with Exectask"
+    commandLine "java", "-classpath", jar.archiveFile.get(), javaMainClass
 }
